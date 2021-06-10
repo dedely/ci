@@ -1,9 +1,26 @@
 language: node_js
 node_js:
   - "12"
+addons:
+  ssh_known_hosts:
+    - ssh-adelabbas.alwaysdata.net
+branches:
+  only:
+    - master
 script:
   - echo '******Build starts******'
   - echo  'Installing dependencies'
   - npm install
   - echo 'Running tests'
   - mocha
+
+after_script:
+  - ssh -i ./deploy_key adelabbas@ssh-adelabbas.alwaysdata.net cd /www/ci && git pull origin master
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_dfdcfd5172af_key -iv $encrypted_dfdcfd5172af_iv
+    -in deploy_key.enc -out ./deploy_key -d
+  - eval "$(ssh-agent -s)"
+  - chmod 600 ./deploy_key
+  - echo -e "Host ssh-adelabbas.alwaysdata.net\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - ssh-add ./deploy_key
