@@ -6,7 +6,7 @@ addons:
     - ssh-adelabbas.alwaysdata.net
 branches:
   only:
-    - master
+    - main
 script:
   - echo '******Build starts******'
   - echo  'Installing dependencies'
